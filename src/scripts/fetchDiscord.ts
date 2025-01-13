@@ -140,14 +140,20 @@ function createSanitizedThread(thread: Thread, messages: Message[]) {
         }
       : {},
     messageCount: combinedResponses.length,
-    messages: combinedResponses.map(({ attachments, author, content, timestamp }) => ({
-      authorAvatar: author.avatar,
-      authorID: author.id,
-      authorName: author.username,
-      content: toHTML(content),
-      createdAt: new Date(timestamp),
-      fileAttachments: attachments,
-    })),
+    messages: combinedResponses.map(({ attachments, author, content, timestamp }) => {
+      if (author.name === 'Payload-Bot') {
+        // Skip Payload bot messages
+      } else {
+        return {
+          authorAvatar: author.avatar,
+          authorID: author.id,
+          authorName: author.username,
+          content: toHTML(content),
+          createdAt: new Date(timestamp),
+          fileAttachments: attachments,
+        }
+      }
+    }),
     ogMessageCount: thread.message_count,
   }
 }
